@@ -256,7 +256,7 @@ public abstract class RecyclerAdapter<Data>
         }
 
         /**
-         * 当触发绑定数据的时候，的回掉；必须复写
+         * 当触发绑定数据的时候，的回调；必须复写
          *
          * @param data 绑定的数据
          */
