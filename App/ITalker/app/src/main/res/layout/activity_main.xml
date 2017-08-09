@@ -1,33 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="net.qiujuer.italker.push.MainActivity">
-
-    <EditText
-        android:id="@+id/edit_query"
+    <android.support.design.widget.AppBarLayout
+        android:elevation="@dimen/len_2"
+        android:outlineProvider="bounds"
+        android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <Button
-        android:id="@+id/btn_submit"
+        android:layout_height="@dimen/actionBarWithStatusBarSize"
+        tools:targetApi="LOLLIPOP"
+        >
+        <FrameLayout
+            android:layout_marginTop="@dimen/statusBarSize"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="@dimen/len_4"
+            android:paddingRight="@dimen/len_4">
+            <net.qiujuer.italker.common.widget.a.PortraitView
+                android:id="@+id/im_portrait"
+                android:layout_width="@dimen/len_40"
+                android:layout_height="@dimen/len_40"
+                android:layout_margin="@dimen/len_4"
+                android:src="@drawable/default_portrait"
+                android:foreground="@drawable/ic_touch_menu"
+                android:padding="@dimen/len_4"
+                android:scaleType="centerCrop"
+                />
+            <TextView
+                android:id="@+id/txt_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="@string/app_name"
+                android:textColor="@color/white"
+                android:textAppearance="@style/TextAppearance.Title"/>
+            <ImageView
+                android:id="@+id/im_search"
+                android:padding="@dimen/len_10"
+                android:layout_width="@dimen/len_40"
+                android:layout_height="@dimen/len_40"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/ic_search"
+                android:layout_margin="@dimen/len_4"
+                android:scaleType="centerInside"
+                android:layout_gravity="end|center_vertical"
+                android:foreground="@drawable/ic_touch_menu"
+                android:tint="?attr/toolbarMenuIconColor"
+                />
+        </FrameLayout>
+    </android.support.design.widget.AppBarLayout>
+    <FrameLayout
+        android:id="@+id/lay_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Submit" />
-
-    <TextView
-        android:id="@+id/txt_result"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/len_52"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+    <net.qiujuer.genius.ui.widget.FloatActionButton
+        android:id="@+id/btn_action"
+        android:tint="@color/white"
+        android:padding="@dimen/len_20"
+        android:src="@drawable/ic_group_add"
+        android:layout_width="@dimen/len_52"
+        android:layout_height="@dimen/len_52"
+        app:gBackgroundColor="@color/colorAccent"
+        app:layout_anchor="@id/lay_container"
+        app:layout_anchorGravity="bottom|end"
+        android:layout_marginBottom="@dimen/len_68"
+        android:layout_marginEnd="@dimen/len_16" />
+    <android.support.design.widget.BottomNavigationView
+        android:background="@color/white"
+        android:id="@+id/navigation"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="@dimen/len_52"
+        android:layout_gravity="bottom"
+        app:menu="@menu/navigation_items"
+        app:itemIconTint="@color/text_nav"
+        app:itemTextColor="@color/text_nav"
+        android:elevation="@dimen/len_4"
+        android:outlineProvider="bounds"
+        android:translationZ="@dimen/len_8"
+        tools:targetApi="lollipop"/>
 
-</LinearLayout>
+</android.support.design.widget.CoordinatorLayout>
