@@ -15,7 +15,7 @@
             android:textAlignment="center"
             app:title="@string/title_select_gallery"
             app:titleTextAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:titleTextColor="@color/textPrimary"/>
+            app:titleTextColor="@color/textPrimary"/>
 
 
 

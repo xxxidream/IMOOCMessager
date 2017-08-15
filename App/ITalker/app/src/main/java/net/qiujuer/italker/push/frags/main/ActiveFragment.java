@@ -2,15 +2,10 @@ package net.qiujuer.italker.push.frags.main;
 
 
 import net.qiujuer.italker.common.app.Fragment;
-import net.qiujuer.italker.common.widget.GalleryView;
 import net.qiujuer.italker.push.R;
-
-import butterknife.BindView;
 
 public class ActiveFragment extends Fragment {
 
-    @BindView(R.id.galleryView)
-    GalleryView mGalley;
 
     public ActiveFragment() {
         // Required empty public constructor
@@ -24,11 +19,6 @@ public class ActiveFragment extends Fragment {
     @Override
     protected void initData() {
         super.initData();
-        mGalley.setup(getLoaderManager(), new GalleryView.SelectedChangedListener() {
-            @Override
-            public void onSelectedCountChanged(int count) {
 
-            }
-        });
     }
 }
