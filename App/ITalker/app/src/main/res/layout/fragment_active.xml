@@ -4,13 +4,10 @@
     android:layout_height="match_parent"
     tools:context="net.qiujuer.italker.push.frags.main.ActiveFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <net.qiujuer.italker.common.widget.GalleyView
+        android:id="@+id/galleyView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Active"
-        android:layout_gravity="center"
-        android:textColor="@color/textPrimary"
-        android:gravity="center"/>
+        android:padding="1dp"/>
 
 </FrameLayout>
