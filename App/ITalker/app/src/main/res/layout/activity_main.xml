@@ -67,11 +67,12 @@
         android:src="@drawable/ic_group_add"
         android:layout_width="@dimen/len_52"
         android:layout_height="@dimen/len_52"
-        app:gBackgroundColor="@color/colorAccent"
-        app:layout_anchor="@id/lay_container"
         app:layout_anchorGravity="bottom|end"
+        android:translationY="@dimen/len_76"
         android:layout_marginBottom="@dimen/len_68"
-        android:layout_marginEnd="@dimen/len_16" />
+        android:layout_marginEnd="@dimen/len_16"
+        app:gBackgroundColor="@color/colorAccent"
+        app:layout_anchor="@id/lay_container"/>
     <android.support.design.widget.BottomNavigationView
         android:background="@color/white"
         android:id="@+id/navigation"
@@ -84,6 +85,7 @@
         android:elevation="@dimen/len_4"
         android:outlineProvider="bounds"
         android:translationZ="@dimen/len_8"
-        tools:targetApi="lollipop"/>
+        tools:targetApi="lollipop"
+        tools:visibility="invisible"/>
 
 </android.support.design.widget.CoordinatorLayout>

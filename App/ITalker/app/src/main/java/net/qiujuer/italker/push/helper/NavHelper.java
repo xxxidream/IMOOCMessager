@@ -93,29 +93,31 @@ public class NavHelper<T> {
      */
     private void doTabChanged(Tab<T> newTab,Tab<T> oldTab){
         FragmentTransaction ft = fragmentManager.beginTransaction();
-        if(oldTab != null) {
-            if(oldTab.fragment != null) {
-                //从界面移除，但是还在Fragment的缓存空间中
+
+        if (oldTab != null) {
+            if (oldTab.fragment != null) {
+                // 从界面移除，但是还在Fragment的缓存空间中
                 ft.detach(oldTab.fragment);
             }
-            if(newTab!=null) {
-                if(newTab.fragment == null){
-                    //首次新建
-                    Fragment fragment = Fragment.instantiate(context,newTab.clx.getName(),null);
-                    //缓存起来
-                    newTab.fragment = fragment;
-                    //提交到FragmentManager
-                    ft.add(containerId,fragment,newTab.clx.getName());
-                }else {
-                    //从FragmentManager的缓存空间中重新加载到界面
-                    ft.attach(newTab.fragment);
-                }
+        }
+
+        if (newTab != null) {
+            if (newTab.fragment == null) {
+                // 首次新建
+                Fragment fragment = Fragment.instantiate(context, newTab.clx.getName(), null);
+                // 缓存起来
+                newTab.fragment = fragment;
+                // 提交到FragmentManger
+                ft.add(containerId, fragment, newTab.clx.getName());
+            } else {
+                // 从FragmentManger的缓存空间中重新加载到界面中
+                ft.attach(newTab.fragment);
             }
         }
-        //提交事务
+        // 提交事务
         ft.commit();
-        //通知回调
-        notifyTabSelect(newTab,oldTab);
+        // 通知回调
+        notifyTabSelect(newTab, oldTab);
     }
 
     /**

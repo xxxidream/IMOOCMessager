@@ -80,7 +80,6 @@ public abstract class Fragment extends android.support.v4.app.Fragment {
      * 初始化数据
      */
     protected void initData() {
-
     }
 
     /**
