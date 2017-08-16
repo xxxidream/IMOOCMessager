@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 
-import net.qiujuer.genius.ui.Ui;
 import net.qiujuer.italker.common.tools.UiTool;
 import net.qiujuer.italker.common.widget.GalleryView;
 import net.qiujuer.italker.push.R;
@@ -102,7 +101,7 @@ public class GalleryFragment extends BottomSheetDialogFragment implements Galler
             //得到屏幕高度
             int screenHeight = UiTool.getScreenHeight(getOwnerActivity());
             //得到状态栏高度
-            int statusHeight = (int)Ui.dipToPx(getContext().getResources(),UiTool.getStatusBarHeight(getOwnerActivity()));
+            int statusHeight = UiTool.getStatusBarHeight(getOwnerActivity());
 //            int statusHeight = (int)Ui.dipToPx(getContext().getResources(),25);
 
             int dialogHeight = screenHeight - statusHeight;
