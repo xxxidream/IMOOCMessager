@@ -4,6 +4,7 @@ package net.qiujuer.italker.push.frags.account;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.util.Log;
 
 import com.bumptech.glide.Glide;
 import com.yalantis.ucrop.UCrop;
@@ -11,6 +12,8 @@ import com.yalantis.ucrop.UCrop;
 import net.qiujuer.italker.common.app.Application;
 import net.qiujuer.italker.common.app.Fragment;
 import net.qiujuer.italker.common.widget.a.PortraitView;
+import net.qiujuer.italker.factory.Factory;
+import net.qiujuer.italker.factory.net.UploadHelper;
 import net.qiujuer.italker.push.R;
 import net.qiujuer.italker.push.frags.media.GalleryFragment;
 
@@ -81,6 +84,16 @@ public class UpdateInfoFragment extends Fragment {
                 .asBitmap()
                 .centerCrop()
                 .into(mPortrait);
+
+        final String localPath = uri.getPath();
+        Log.e("TAG","localPath: " +localPath);
+        Factory.runOnAsync(new Runnable() {
+            @Override
+            public void run() {
+                String url = UploadHelper.uploadPortrait(localPath);
+                Log.e("TAG","url: " +url);
+            }
+        });
     }
 
 }

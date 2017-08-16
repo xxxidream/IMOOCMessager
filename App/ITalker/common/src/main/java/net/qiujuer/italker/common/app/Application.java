@@ -21,7 +21,14 @@ public class Application extends android.app.Application {
         super.onCreate();
         instance = this;
     }
-
+    /**
+     * 外部获取单例
+     *
+     * @return Application
+     */
+    public static Application getInstance() {
+        return instance;
+    }
     /**
      * 获取缓存文件夹地址
      * @return 返回当前app缓存文件夹地址
