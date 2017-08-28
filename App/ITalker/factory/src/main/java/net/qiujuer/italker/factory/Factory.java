@@ -4,10 +4,14 @@ import android.support.annotation.StringRes;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.raizlabs.android.dbflow.config.FlowConfig;
+import com.raizlabs.android.dbflow.config.FlowManager;
 
 import net.qiujuer.italker.common.app.Application;
 import net.qiujuer.italker.factory.data.DataSource;
 import net.qiujuer.italker.factory.model.api.RspModel;
+import net.qiujuer.italker.factory.persistence.Account;
+import net.qiujuer.italker.factory.utils.DBFlowExclusionStrategy;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -31,10 +35,19 @@ public class Factory {
                 //设置事件格式
                 .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS")
                 //TODO 设置一个过滤器，数据库级别的model不进行转换
-                .setExclusionStrategies()
+                .setExclusionStrategies(new DBFlowExclusionStrategy())
                 .create();
     }
 
+    /**
+     * Factory 中的初始化
+     */
+    public static void setup(){
+        FlowManager.init(new FlowConfig.Builder(app()).
+                openDatabasesOnInit(true)
+                .build());
+        Account.load(app());
+    }
     /**
      * 返回全局的Application
      * @return

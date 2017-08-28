@@ -1,12 +1,14 @@
 package net.qiujuer.italker.factory.model.db;
 
+import com.raizlabs.android.dbflow.structure.BaseModel;
+
 import java.util.Date;
 
 /**
  * Created by admin on 2017/8/18.
  */
 
-public class User {
+public class User extends BaseModel {
     private String id;
     private String name;
     private String phone;

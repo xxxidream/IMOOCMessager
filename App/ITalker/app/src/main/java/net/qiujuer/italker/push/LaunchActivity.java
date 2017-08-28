@@ -6,12 +6,15 @@ import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.graphics.drawable.ColorDrawable;
+import android.text.TextUtils;
 import android.util.Property;
 import android.view.View;
 
 import net.qiujuer.genius.res.Resource;
 import net.qiujuer.genius.ui.compat.UiCompat;
 import net.qiujuer.italker.common.app.Activity;
+import net.qiujuer.italker.factory.persistence.Account;
+import net.qiujuer.italker.push.activities.AccountActivity;
 import net.qiujuer.italker.push.activities.MainActivity;
 import net.qiujuer.italker.push.frags.assist.PermissionsFragment;
 
@@ -40,20 +43,71 @@ public class LaunchActivity extends Activity {
     @Override
     protected void initData() {
         super.initData();
-        startAnim(0.8f, new Runnable() {
+        //动画进入到50%等待pushId获取
+        startAnim(0.5f, new Runnable() {
             @Override
             public void run() {
-               skip();
+               waitPushReceivedId();
             }
         });
     }
+
+    /**
+     * 等待个推框架对我们的pushId设置值
+     */
+    private void waitPushReceivedId(){
+        if(Account.isLogin()){
+            if(Account.isBind()){
+                skip();
+                return;
+            }
+        }else{
+            //没有登录
+            //如果有值，没有登录是不能绑定id
+            if(!TextUtils.isEmpty(Account.getPushId())){
+                skip();
+                return;
+            }
+        }
+
+
+        //循环等待
+        getWindow().getDecorView()
+                .postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        waitPushReceivedId();
+                    }
+                },500);
+    }
+
+
+    /**
+     * 在跳转之前需要把剩下的50%完成
+     */
     private void skip(){
+        startAnim(1f, new Runnable() {
+            @Override
+            public void run() {
+                reallySkip();
+            }
+        });
+
+    }
+    /**
+     * 真实的跳转
+     */
+    private void reallySkip(){
         if(PermissionsFragment.haveAll(this,getSupportFragmentManager())){
-            MainActivity.show(this);
+          //检查跳转到主页还是登录页
+           if(Account.isLogin()){
+               MainActivity.show(this);
+           }else{
+               AccountActivity.show(this);
+           }
             finish();
         }
     }
-
     @Override
     protected void onResume() {
         super.onResume();

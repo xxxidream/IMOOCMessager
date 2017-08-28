@@ -9,6 +9,7 @@ import net.qiujuer.italker.factory.model.api.account.RegisterModel;
 import net.qiujuer.italker.factory.model.db.User;
 import net.qiujuer.italker.factory.net.Network;
 import net.qiujuer.italker.factory.net.RemoteService;
+import net.qiujuer.italker.factory.persistence.Account;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -60,6 +61,6 @@ public class AccountHelper {
      * @param callback
      */
     public static void bindPush(final DataSource.Callback<User> callback){
-        callback.onDataNotAvailable(R.string.app_name);
+        Account.setBind(true);
     }
 }
