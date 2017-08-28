@@ -11,7 +11,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Created by admin on 2017/8/18.
  */
 
-public class Network {
+public class NetWork {
     public static Retrofit getRetrofit(){
         //得到一个ok 的client
         OkHttpClient client = new OkHttpClient.Builder().build();

@@ -7,7 +7,7 @@ import net.qiujuer.italker.factory.model.api.RspModel;
 import net.qiujuer.italker.factory.model.api.account.AccountRspModel;
 import net.qiujuer.italker.factory.model.api.account.RegisterModel;
 import net.qiujuer.italker.factory.model.db.User;
-import net.qiujuer.italker.factory.net.Network;
+import net.qiujuer.italker.factory.net.NetWork;
 import net.qiujuer.italker.factory.net.RemoteService;
 import net.qiujuer.italker.factory.persistence.Account;
 
@@ -20,8 +20,8 @@ import retrofit2.Response;
  */
 
 public class AccountHelper {
-    public static void register(RegisterModel model, final DataSource.Callback<User> callback){
-        RemoteService service = Network.getRetrofit().create(RemoteService.class);
+    public static void register(final RegisterModel model, final DataSource.Callback<User> callback){
+        RemoteService service = NetWork.getRetrofit().create(RemoteService.class);
         //得到一个call
         Call<RspModel<AccountRspModel>> call = service.accountRegister(model);
         //异步
@@ -33,9 +33,24 @@ public class AccountHelper {
                 RspModel<AccountRspModel> rspModel = response.body();
                 if(rspModel.success()) {
                     AccountRspModel accountRspModel = rspModel.getResult();
+                    User user = accountRspModel.getUser();
+                    //TODO 数据库写入和缓存绑定
+                    //第一种直接保存
+                    user.save();
+                    //第二种通过ModelAdapter保存
+//                        FlowManager.getModelAdapter(User.class)
+//                                    .save(user);
+                    //第三种 事务中
+//                        DatabaseDefinition definition = FlowManager.getDatabase(AppDataBase.class);
+//                        definition.beginTransactionAsync(new ITransaction() {
+//                            @Override
+//                            public void execute(DatabaseWrapper databaseWrapper) {
+//                                FlowManager.getModelAdapter(User.class)
+//                                        .save(user);
+//                            }
+//                        }).build().execute();
+                    Account.login(accountRspModel);
                     if(accountRspModel.isBind()){
-                        User user = accountRspModel.getUser();
-                        //TODO 数据库写入和缓存绑定
                         //然后返回
                         callback.onDataLoaded(user);
                     }else{
