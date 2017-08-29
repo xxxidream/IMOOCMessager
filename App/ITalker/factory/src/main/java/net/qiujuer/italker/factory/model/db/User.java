@@ -13,7 +13,7 @@ import java.util.Date;
 @Table(database = AppDataBase.class)
 public class User extends BaseModel {
     public static final int SEX_MAN =1;
-    public static final int SEX_WOWEN =1;
+    public static final int SEX_WOWEN =2;
     @PrimaryKey
     private String id;
     @Column
@@ -25,7 +25,7 @@ public class User extends BaseModel {
     @Column
     private String desc;
     @Column
-    private int sex = SEX_MAN;
+    private int sex = 0;
     //我对某人的备注信息
     @Column
     private String alias;

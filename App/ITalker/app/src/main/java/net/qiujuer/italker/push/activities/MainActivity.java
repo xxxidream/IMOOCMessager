@@ -2,6 +2,7 @@ package net.qiujuer.italker.push.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.view.Menu;
@@ -20,6 +21,7 @@ import net.qiujuer.genius.ui.Ui;
 import net.qiujuer.genius.ui.widget.FloatActionButton;
 import net.qiujuer.italker.common.app.Activity;
 import net.qiujuer.italker.common.widget.a.PortraitView;
+import net.qiujuer.italker.factory.persistence.Account;
 import net.qiujuer.italker.push.R;
 import net.qiujuer.italker.push.frags.main.ActiveFragment;
 import net.qiujuer.italker.push.frags.main.ContactFragment;
@@ -55,6 +57,15 @@ public class MainActivity extends Activity  implements  BottomNavigationView.OnN
         context.startActivity(new Intent(context,MainActivity.class));
     }
 
+    @Override
+    protected boolean initArgs(Bundle bundle) {
+        if(Account.isComplete()){
+            return super.initArgs(bundle);
+        }else{
+            UserActivity.show(this);
+            return false;
+        }
+    }
 
     @Override
     protected int getContentLayoutId() {
