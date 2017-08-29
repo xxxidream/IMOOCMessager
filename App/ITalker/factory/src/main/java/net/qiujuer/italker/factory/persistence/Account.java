@@ -36,6 +36,9 @@ public class Account {
         SharedPreferences sp = context.getSharedPreferences(Account.class.getName(),Context.MODE_PRIVATE);
         pushId = sp.getString(KEY_PUSH_ID,"");
         isBind = sp.getBoolean(KEY_IS_BIND,false);
+        token = sp.getString(KEY_TOKEN,"");
+        userId = sp.getString(KEY_USER_ID,"");
+        account = sp.getString(KEY_ACCOUNT,"");
     }
     public static void save(Context context){
         SharedPreferences sp = context.getSharedPreferences(Account.class.getName(),Context.MODE_PRIVATE);
@@ -100,5 +103,8 @@ public class Account {
                 .from(User.class)
                 .where(User_Table.id.eq(userId))
                 .querySingle();
+    }
+    public static String getToken(){
+        return token;
     }
 }
