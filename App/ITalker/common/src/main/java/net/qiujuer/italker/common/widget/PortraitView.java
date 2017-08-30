@@ -1,4 +1,4 @@
-package net.qiujuer.italker.common.widget.a;
+package net.qiujuer.italker.common.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;

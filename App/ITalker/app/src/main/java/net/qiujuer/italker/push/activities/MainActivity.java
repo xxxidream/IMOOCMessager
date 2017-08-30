@@ -20,7 +20,7 @@ import com.bumptech.glide.request.target.ViewTarget;
 import net.qiujuer.genius.ui.Ui;
 import net.qiujuer.genius.ui.widget.FloatActionButton;
 import net.qiujuer.italker.common.app.Activity;
-import net.qiujuer.italker.common.widget.a.PortraitView;
+import net.qiujuer.italker.common.widget.PortraitView;
 import net.qiujuer.italker.factory.persistence.Account;
 import net.qiujuer.italker.push.R;
 import net.qiujuer.italker.push.frags.main.ActiveFragment;
