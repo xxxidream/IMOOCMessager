@@ -10,6 +10,8 @@ import net.qiujuer.italker.factory.model.db.User;
 import net.qiujuer.italker.factory.net.NetWork;
 import net.qiujuer.italker.factory.net.RemoteService;
 
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -47,4 +49,31 @@ public class UserHelper {
             }
         });
     }
+
+    public static Call search(String name, final DataSource.Callback<List<UserCard>> callback){
+        RemoteService service = NetWork.remote();
+        //得到一个call
+        Call<RspModel<List<UserCard>>> call = service.userSearch(name);
+        //异步
+        call.enqueue(new Callback<RspModel<List<UserCard>>>() {
+            @Override
+            public void onResponse(Call<RspModel<List<UserCard>>> call, Response<RspModel<List<UserCard>>> response) {
+                RspModel<List<UserCard>> rspModel = response.body();
+                if (rspModel.success()){
+                    List<UserCard> userCards = rspModel.getResult();
+                    callback.onDataLoaded(userCards);
+                }else{
+                    Factory.decodeRspCode(rspModel,callback);
+                }
+            }
+            @Override
+            public void onFailure(Call<RspModel<List<UserCard>>> call, Throwable t) {
+                if(callback!=null){
+                    callback.onDataNotAvailable(R.string.data_network_error);
+                }
+            }
+        });
+        return call;
+    }
+
 }
