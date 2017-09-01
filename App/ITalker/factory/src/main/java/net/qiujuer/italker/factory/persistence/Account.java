@@ -109,6 +109,9 @@ public class Account {
                 .where(User_Table.id.eq(userId))
                 .querySingle();
     }
+    public static String getUserId(){
+        return getUser().getId();
+    }
     public static String getToken(){
         return token;
     }

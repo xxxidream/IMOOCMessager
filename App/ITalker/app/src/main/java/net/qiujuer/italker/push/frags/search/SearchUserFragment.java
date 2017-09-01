@@ -24,6 +24,7 @@ import net.qiujuer.italker.factory.presenter.contact.FollowPresenter;
 import net.qiujuer.italker.factory.presenter.search.SearchContract;
 import net.qiujuer.italker.factory.presenter.search.SearchUserPresenter;
 import net.qiujuer.italker.push.R;
+import net.qiujuer.italker.push.activities.PersonalActivity;
 import net.qiujuer.italker.push.activities.SearchActivity;
 
 import java.util.List;
@@ -62,7 +63,7 @@ public class SearchUserFragment extends PresenterFragment<SearchContract.Present
 
             @Override
             protected ViewHolder<UserCard> onCreateViewHolder(View root, int viewType) {
-                return new SearchUserFragment.viewHolder(root);
+                return new SearchUserFragment.ViewHolder(root);
             }
         });
         mEmptyView.bind(mRecycler);
@@ -97,7 +98,7 @@ public class SearchUserFragment extends PresenterFragment<SearchContract.Present
         mPlaceHolderView.triggerOkOrEmpty(mAdapter.getItemCount()>0);
     }
 
-    class viewHolder extends RecyclerAdapter.ViewHolder<UserCard>
+    class ViewHolder extends RecyclerAdapter.ViewHolder<UserCard>
     implements FollowContract.View{
         @BindView(R.id.im_portrait)
         PortraitView mPortrait;
@@ -109,16 +110,17 @@ public class SearchUserFragment extends PresenterFragment<SearchContract.Present
         ImageView mFollow;
 
         private FollowContract.Presenter mPresenter;
-        public viewHolder(View itemView) {
+        public ViewHolder(View itemView) {
             super(itemView);
             new FollowPresenter(this);
         }
         @Override
         protected void onBind(UserCard userCard) {
-            Glide.with(SearchUserFragment.this)
-                    .load(userCard.getPortrait())
-                    .centerCrop()
-                    .into(mPortrait);
+//            Glide.with(SearchUserFragment.this)
+//                    .load(userCard.getPortrait())
+//                    .centerCrop()
+//                    .into(mPortrait);
+            mPortrait.setup(Glide.with(SearchUserFragment.this),userCard);
             mName.setText(userCard.getName());
             mFollow.setEnabled(!userCard.isFollow());
         }
@@ -129,6 +131,10 @@ public class SearchUserFragment extends PresenterFragment<SearchContract.Present
         void onFollowClick(){
             //发起关注
             mPresenter.follow(mData.getId());
+        }
+        @OnClick(R.id.im_portrait)
+        void onPortraitClick(){
+            PersonalActivity.show(getContext(),mData.getId());
         }
         @Override
         public void onFollowSucceed(UserCard userCard) {

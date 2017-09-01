@@ -100,6 +100,10 @@ public class MainActivity extends Activity implements BottomNavigationView.OnNav
         //从底部导航中接管我们的menu,然后进行手动的触发第一次点击
         Menu menu = mNavigation.getMenu();
         menu.performIdentifierAction(R.id.action_home, 0);
+
+        //初始化头像加载
+        mPortrait.setup(Glide.with(this),Account.getUserId());
+
     }
 
     @OnClick(R.id.im_search)
@@ -108,6 +112,10 @@ public class MainActivity extends Activity implements BottomNavigationView.OnNav
         int type = Objects.equals(mNavHelper.getCurrentTab().extra, R.string.title_group) ?
                 SearchActivity.TYPE_GROUP : SearchActivity.TYPE_USER;
         SearchActivity.show(this, type);
+    }
+    @OnClick(R.id.im_portrait)
+    void onPortraitClick() {
+        PersonalActivity.show(this,Account.getUserId());
     }
 
     @OnClick(R.id.btn_action)

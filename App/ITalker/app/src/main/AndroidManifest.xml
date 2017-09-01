@@ -57,13 +57,21 @@
             android:theme="@style/AppTheme.Account" />
         <activity
             android:name=".activities.SearchActivity"
-            android:screenOrientation="portrait"
             android:label="@string/title_search"
-            android:theme="@style/AppTheme.TransStatusBar"></activity><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
-     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.TransStatusBar" />
+
+        <activity
+            android:name=".activities.MessageActivity"
+            android:label="@string/title_activity_message"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.TransStatusBar" ></activity>
+
+        <activity
+            android:name=".activities.PersonalActivity"
+            android:label="@string/title_activity_personal"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.TransStatusBar" />
     </application>
 
 </manifest>

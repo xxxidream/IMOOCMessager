@@ -1,5 +1,6 @@
 package net.qiujuer.italker.factory.model.card;
 
+import net.qiujuer.italker.factory.model.Author;
 import net.qiujuer.italker.factory.model.db.User;
 
 import java.util.Date;
@@ -8,7 +9,7 @@ import java.util.Date;
  * Created by 16571 on 2017/8/30.
  */
 
-public class UserCard {
+public class UserCard implements Author{
     private String id;
     private String name;
     private String phone;

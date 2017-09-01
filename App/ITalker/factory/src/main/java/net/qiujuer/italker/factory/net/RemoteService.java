@@ -67,4 +67,11 @@ public interface RemoteService {
     @PUT("user/follow/{userId}")
     Call<RspModel<UserCard>> userFollow(@Path("userId")String userId);
 
+    /**
+     * 用户联系人
+     * @return
+     */
+    @GET("user/contact")
+    Call<RspModel<List<UserCard>>> userContacts();
+
 }
