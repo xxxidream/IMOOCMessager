@@ -12,6 +12,7 @@ public interface PersonalContract {
         User getUserPersonal();
     }
     interface View extends BaseContract.View<Presenter>{
+        String getUserId();
         void onLoadDone(User user);
         void allowSayHello(boolean isAllow);
         void setFollowStatus(boolean isFollow);

@@ -111,6 +111,7 @@ public class LaunchActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+//        waitPushReceivedId();
 
     }
 

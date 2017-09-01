@@ -1,5 +1,7 @@
 package net.qiujuer.italker.factory.data.helper;
 
+import com.raizlabs.android.dbflow.sql.language.SQLite;
+
 import net.qiujuer.italker.factory.Factory;
 import net.qiujuer.italker.factory.R;
 import net.qiujuer.italker.factory.data.DataSource;
@@ -7,9 +9,11 @@ import net.qiujuer.italker.factory.model.api.RspModel;
 import net.qiujuer.italker.factory.model.api.user.UserUpdateModel;
 import net.qiujuer.italker.factory.model.card.UserCard;
 import net.qiujuer.italker.factory.model.db.User;
+import net.qiujuer.italker.factory.model.db.User_Table;
 import net.qiujuer.italker.factory.net.NetWork;
 import net.qiujuer.italker.factory.net.RemoteService;
 
+import java.io.IOException;
 import java.util.List;
 
 import retrofit2.Call;
@@ -137,6 +141,60 @@ public class UserHelper {
                 }
             }
         });
+    }
+
+    public static User findFromLocal(String id){
+       return SQLite.select()
+                .from(User.class)
+                .where(User_Table.id.eq(id))
+                .querySingle();
+    }
+
+
+    public static User findFromNet(String id){
+        RemoteService remoteService = NetWork.remote();
+        try {
+            Response<RspModel<UserCard>> response = remoteService.userFind(id).execute();
+            UserCard card = response.body().getResult();
+            if (card!=null){
+                //数据库的刷新
+                User user = card.build();
+                user.save();
+                //TODO
+                return card.build();
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    /**
+     * 搜索 用户
+     * 优先本地缓存，没有就从网络拉取
+     * @param id
+     * @return
+     */
+    public static User search(String id){
+        User user = findFromLocal(id);
+        if (user==null){
+            return findFromNet(id);
+        }
+        return user;
+    }
+    /**
+     * 搜索 用户
+     * 优先网络拉取，没有就从本地
+     * @param id
+     * @return
+     */
+    public static User searchFirstOfN (String id){
+        User user = findFromNet(id);
+        if (user==null){
+            return findFromLocal(id);
+        }
+        return user;
+
     }
 
 }

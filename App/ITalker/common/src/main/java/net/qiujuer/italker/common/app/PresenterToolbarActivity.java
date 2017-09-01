@@ -26,6 +26,15 @@ implements BaseContract.View<Presenter>{
             Application.showToast(str);
         }
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mPresenter!=null){
+            mPresenter.destory();
+        }
+    }
+
     /**
      * 初始化presenter
      * @return
@@ -37,6 +46,12 @@ implements BaseContract.View<Presenter>{
         // 显示一个Loading
         if (mPlaceHolderView!=null){
             mPlaceHolderView.triggerLoading();
+        }
+    }
+
+    protected void hideLoading(){
+        if (mPlaceHolderView!=null){
+            mPlaceHolderView.triggerOk();
         }
     }
 
