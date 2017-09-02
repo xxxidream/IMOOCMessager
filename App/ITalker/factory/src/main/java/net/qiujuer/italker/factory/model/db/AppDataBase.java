@@ -3,11 +3,13 @@ package net.qiujuer.italker.factory.model.db;
 import com.raizlabs.android.dbflow.annotation.Database;
 
 /**
- * Created by admin on 2017/8/28.
+ * 数据库的基本信息
+ *
+ * @author qiujuer Email:qiujuer@live.cn
+ * @version 1.0.0
  */
-@Database(name = AppDataBase.NAME,version = AppDataBase.VERSION)
-public class AppDataBase {
-    public static final String NAME="AppDataBase";
-    public static final int VERSION=  1;
-
+@Database(name = AppDatabase.NAME, version = AppDatabase.VERSION)
+public class AppDatabase {
+    public static final String NAME = "AppDatabase";
+    public static final int VERSION = 2;
 }
