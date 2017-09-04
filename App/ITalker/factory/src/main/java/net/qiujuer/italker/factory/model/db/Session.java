@@ -19,7 +19,7 @@ import java.util.Objects;
  * @version 1.0.0
  */
 @Table(database = AppDatabase.class)
-public class Session extends BaseModel implements DiffUiDataCallback.UiDataDiff<Session> {
+public class Session extends BaseModel implements DiffUiDataCallback.UiDataDiffer<Session> {
     @PrimaryKey
     private String id; // Id, 是Message中的接收者User的Id或者群的Id
     @Column
@@ -183,6 +183,10 @@ public class Session extends BaseModel implements DiffUiDataCallback.UiDataDiff<
             identify.id = message.getGroup().getId();
         }
         return identify;
+    }
+
+    public void refreshToNow() {
+        //TODO  刷新会话对应的信息为当前Message的最新状态
     }
 
 

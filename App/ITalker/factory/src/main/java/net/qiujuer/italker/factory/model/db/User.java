@@ -15,8 +15,8 @@ import java.util.Objects;
 /**
  * Created by admin on 2017/8/18.
  */
-@Table(database = AppDataBase.class)
-public class User extends BaseModel implements Author,DiffUiDataCallback.UiDataDiff<User> {
+@Table(database = AppDatabase.class)
+public class User extends BaseModel implements Author,DiffUiDataCallback.UiDataDiffer<User> {
     public static final int SEX_MAN =1;
     public static final int SEX_WOWEN =2;
 

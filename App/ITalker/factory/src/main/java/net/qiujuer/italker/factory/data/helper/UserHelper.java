@@ -12,6 +12,7 @@ import net.qiujuer.italker.factory.model.db.User;
 import net.qiujuer.italker.factory.model.db.User_Table;
 import net.qiujuer.italker.factory.net.NetWork;
 import net.qiujuer.italker.factory.net.RemoteService;
+import net.qiujuer.italker.utils.CollectionUtil;
 
 import java.io.IOException;
 import java.util.List;
@@ -37,8 +38,7 @@ public class UserHelper {
                 if (rspModel.success()){
                     UserCard userCard = rspModel.getResult();
                     //保存数据库，先转换成User
-                    User user = userCard.build();
-                    user.save();
+                    Factory.getUserCenter().dispatch(userCard);
                     callback.onDataLoaded(userCard);
                 }else{
                     Factory.decodeRspCode(rspModel,callback);
@@ -96,8 +96,7 @@ public class UserHelper {
                 RspModel<UserCard> rspModel = response.body();
                 if (rspModel.success()){
                     UserCard userCard= rspModel.getResult();
-                    User user = userCard.build();
-                    user.save();
+                    Factory.getUserCenter().dispatch(userCard);
                     //TODO 通知联系人列表刷新
                     callback.onDataLoaded(userCard);
                 }else{
@@ -115,10 +114,10 @@ public class UserHelper {
 
     /**
      * 刷新联系人的操作
-     * @param callback
-     * @return
+     * 不需要返回Callback ，直接存储到数据库并通过数据库观察者进行通知界面更新
+     * 界面更新的时候进行对比，然后差异更新
      */
-    public static void refreshContacts(final DataSource.Callback<List<UserCard>> callback){
+    public static void refreshContacts(){
         RemoteService service = NetWork.remote();
         //得到一个call
         Call<RspModel<List<UserCard>>> call = service.userContacts();
@@ -129,16 +128,17 @@ public class UserHelper {
                 RspModel<List<UserCard>> rspModel = response.body();
                 if (rspModel.success()){
                     List<UserCard> userCards = rspModel.getResult();
-                    callback.onDataLoaded(userCards);
+                    if (userCards==null||userCards.size()==0)
+                        return;
+//                  Factory.getUserCenter().dispatch(userCards.toArray(new UserCard[0]));
+                    Factory.getUserCenter().dispatch(CollectionUtil.toArray(userCards,UserCard.class));
                 }else{
-                    Factory.decodeRspCode(rspModel,callback);
+                    Factory.decodeRspCode(rspModel,null);
                 }
             }
             @Override
             public void onFailure(Call<RspModel<List<UserCard>>> call, Throwable t) {
-                if(callback!=null){
-                    callback.onDataNotAvailable(R.string.data_network_error);
-                }
+                //do nothing
             }
         });
     }
@@ -158,8 +158,7 @@ public class UserHelper {
             UserCard card = response.body().getResult();
             if (card!=null){
                 //数据库的刷新
-                User user = card.build();
-                user.save();
+               Factory.getUserCenter().dispatch(card);
                 //TODO
                 return card.build();
             }

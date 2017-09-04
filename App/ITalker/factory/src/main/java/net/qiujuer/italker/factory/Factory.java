@@ -9,6 +9,12 @@ import com.raizlabs.android.dbflow.config.FlowManager;
 
 import net.qiujuer.italker.common.app.Application;
 import net.qiujuer.italker.factory.data.DataSource;
+import net.qiujuer.italker.factory.data.group.GroupCenter;
+import net.qiujuer.italker.factory.data.group.GroupDispatcher;
+import net.qiujuer.italker.factory.data.message.MessageCenter;
+import net.qiujuer.italker.factory.data.message.MessageDispatcher;
+import net.qiujuer.italker.factory.data.user.UserCenter;
+import net.qiujuer.italker.factory.data.user.UserDispatcher;
 import net.qiujuer.italker.factory.model.api.RspModel;
 import net.qiujuer.italker.factory.persistence.Account;
 import net.qiujuer.italker.factory.utils.DBFlowExclusionStrategy;
@@ -151,6 +157,32 @@ public class Factory {
      */
     public static void dispatchPush(String message) {
         // TODO
+    }
+
+    /**
+     * 获取一个用户中心的实现类
+     * 用户中心的规范接口
+     * @return
+     */
+    public static UserCenter getUserCenter(){
+        return UserDispatcher.instance();
+    }
+
+    /**
+     * 获取一个消息中心的实现类
+     * @return
+     */
+    public static MessageCenter getMessageCenter(){
+        return MessageDispatcher.instance();
+    }
+
+
+    /**
+     * 获取一个群中心的实现类
+     * @return
+     */
+    public static GroupCenter getGroupCenter(){
+        return GroupDispatcher.instance();
     }
 
 }

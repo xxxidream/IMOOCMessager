@@ -72,9 +72,9 @@ public class AccountHelper {
             if(rspModel.success()) {
                 AccountRspModel accountRspModel = rspModel.getResult();
                 User user = accountRspModel.getUser();
-                //TODO 数据库写入和缓存绑定
+                DbHelper.save(User.class,user);
                 //第一种直接保存
-                user.save();
+//                user.save();
                 //第二种通过ModelAdapter保存
 //                        FlowManager.getModelAdapter(User.class)
 //                                    .save(user);

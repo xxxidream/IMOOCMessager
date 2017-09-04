@@ -8,7 +8,7 @@ import java.util.List;
  * Created by admin on 2017/9/1.
  */
 
-public class DiffUiDataCallback<T extends DiffUiDataCallback.UiDataDiff<T>> extends DiffUtil.Callback{
+public class DiffUiDataCallback<T extends DiffUiDataCallback.UiDataDiffer<T>> extends DiffUtil.Callback{
     private List<T> mOldList,mNewList;
 
     public DiffUiDataCallback(List<T> mOldList, List<T> mNewList) {
@@ -44,7 +44,7 @@ public class DiffUiDataCallback<T extends DiffUiDataCallback.UiDataDiff<T>> exte
         return beanNew.isUiContentSame(beanOld);
     }
 
-    public interface UiDataDiff<T>{
+    public interface UiDataDiffer<T>{
         //传递一个旧的数据给，问你是否和你标识的是同一个数据
 
         boolean isSame(T old);
