@@ -95,7 +95,7 @@ public class DbHelper {
                 ModelAdapter<Model> adapter = FlowManager.getModelAdapter(tClass);
 //              adapter.saveAll(CollectionUtil.toArrayList(users));
                 adapter.saveAll(Arrays.asList(models));
-                instance.notifyDelete(tClass,models);
+                instance.notifySave(tClass,models);
             }
         }).build().execute();
     }
@@ -240,7 +240,7 @@ public class DbHelper {
     }
 
     @SuppressWarnings("unused")
-    public interface ChangedListener<Data>{
+    public interface ChangedListener<Data extends BaseModel>{
         void onDataSave(Data... list);
         void onDataDelete(Data... list);
     }

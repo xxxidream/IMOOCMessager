@@ -1,17 +1,15 @@
 package net.qiujuer.italker.factory.presenter.contact;
 
 
-import android.support.annotation.NonNull;
 import android.support.v7.util.DiffUtil;
 
-import com.raizlabs.android.dbflow.sql.language.SQLite;
-import com.raizlabs.android.dbflow.structure.database.transaction.QueryTransaction;
-
+import net.qiujuer.italker.common.widget.recycler.RecyclerAdapter;
+import net.qiujuer.italker.factory.data.DataSource;
 import net.qiujuer.italker.factory.data.helper.UserHelper;
+import net.qiujuer.italker.factory.data.user.ContactDataSource;
+import net.qiujuer.italker.factory.data.user.ContactRepository;
 import net.qiujuer.italker.factory.model.db.User;
-import net.qiujuer.italker.factory.model.db.User_Table;
-import net.qiujuer.italker.factory.persistence.Account;
-import net.qiujuer.italker.factory.presenter.BasePresenter;
+import net.qiujuer.italker.factory.presenter.BaseRecyclerPresenter;
 import net.qiujuer.italker.factory.utils.DiffUiDataCallback;
 
 import java.util.List;
@@ -20,54 +18,22 @@ import java.util.List;
  * Created by admin on 2017/9/1.
  */
 
-public class ContactPresenter extends BasePresenter<ContactContract.View>
-implements ContactContract.Presenter{
+public class ContactPresenter extends BaseRecyclerPresenter<User,ContactContract.View>
+implements ContactContract.Presenter,DataSource.SuccessCallback<List<User>>{
+
+    private ContactDataSource mSource;
     public ContactPresenter(ContactContract.View view) {
         super(view);
+        mSource = new ContactRepository();
     }
 
     @Override
     public void start() {
         super.start();
-        //数据库数据
-        SQLite.select()
-                .from(User.class)
-                .where(User_Table.isFollow.eq(true))
-                .and(User_Table.id.notEq(Account.getUserId()))
-                .orderBy(User_Table.name,true)
-                .limit(100)
-                .async()
-                .queryListResultCallback(new QueryTransaction.QueryResultListCallback<User>() {
-                    @Override
-                    public void onListQueryResult(QueryTransaction transaction,
-                                                  @NonNull List<User> tResult) {
-                        getView().getRecyclerAdapter().replace(tResult);
-                        getView().onAdapterDataChanged();
-                    }
-                }).execute();
+        //加载本地数据,并添加监听
+        mSource.load(this);
         //加载网络数据
         UserHelper.refreshContacts();
-        /*
-        * final List<User> users = new ArrayList<User>();
-                for (UserCard userCard:userCards){
-                    users.add(userCard.build());
-                }
-               //丢到事务中保存数据库
-                DatabaseDefinition definition = FlowManager.getDatabase(AppDatabase.class);
-                        definition.beginTransactionAsync(new ITransaction() {
-                            @Override
-                            public void execute(DatabaseWrapper databaseWrapper) {
-                                    FlowManager.getModelAdapter(User.class)
-                                            .saveAll(users);
-
-
-                            }
-                        }).build().execute();
-
-                //网络的数据往往是新的，我们需要直接刷新错误
-                List<User> old = getView().getRecyclerAdapter().getItems();
-                diff(old,users);
-                */
         //TODO 问题
         //关注后虽然存储数据库，但是没有通知页面更新
         //如果刷新数据库或者从网络刷新，最后刷新的时候都是全局刷新
@@ -76,15 +42,25 @@ implements ContactContract.Presenter{
 
     }
 
-    private void diff(List<User> oldList,List<User> newList){
-        DiffUtil.Callback  callback = new DiffUiDataCallback<>(oldList,newList);
+
+    //子线程
+    @Override
+    public void onDataLoaded(List<User> users) {
+        //无论怎么操作，数据变更都会通知到这里来
+        final ContactContract.View view = getView();
+        if (view ==null)
+            return;
+        RecyclerAdapter<User> adapter = view.getRecyclerAdapter();
+        List<User> oldList = adapter.getItems();
+        DiffUtil.Callback  callback = new DiffUiDataCallback<>(oldList,users);
         DiffUtil.DiffResult result =DiffUtil.calculateDiff(callback);
-        getView().getRecyclerAdapter().replace(newList);//完成对比后进行数据的赋值
+        refreshData(result,users);
+    }
 
-        //尝试刷新页面
-        result.dispatchUpdatesTo(getView().getRecyclerAdapter());
-        //TODO
-        getView().onAdapterDataChanged();
-
+    @Override
+    public void destory() {
+        super.destory();
+        //当界面销毁的时候，我们应该把数据监听销毁
+        mSource.dispose();
     }
 }

@@ -25,7 +25,7 @@ public class DiffUiDataCallback<T extends DiffUiDataCallback.UiDataDiffer<T>> ex
     @Override
     public int getNewListSize() {
         //新的数据大小
-        return mOldList.size();
+        return mNewList.size();
     }
 
     //两个类是否就是同一个东西，比如id相等的User
