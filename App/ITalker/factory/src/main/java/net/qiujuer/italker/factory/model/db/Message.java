@@ -4,10 +4,8 @@ import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
-import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import net.qiujuer.italker.factory.persistence.Account;
-import net.qiujuer.italker.factory.utils.DiffUiDataCallback;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -21,7 +19,7 @@ import java.util.Objects;
  * @version 1.0.0
  */
 @Table(database = AppDatabase.class)
-public class Message extends BaseModel implements DiffUiDataCallback.UiDataDiffer<Message>, Serializable {
+public class Message extends BaseDbModel<Message> implements  Serializable {
     // 接收者类型
     public static final int RECEIVER_TYPE_NONE = 1;
     public static final int RECEIVER_TYPE_GROUP = 2;

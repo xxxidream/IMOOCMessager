@@ -1,9 +1,11 @@
 package net.qiujuer.italker.factory;
 
 import android.support.annotation.StringRes;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowManager;
 
@@ -15,10 +17,17 @@ import net.qiujuer.italker.factory.data.message.MessageCenter;
 import net.qiujuer.italker.factory.data.message.MessageDispatcher;
 import net.qiujuer.italker.factory.data.user.UserCenter;
 import net.qiujuer.italker.factory.data.user.UserDispatcher;
+import net.qiujuer.italker.factory.model.api.PushModel;
 import net.qiujuer.italker.factory.model.api.RspModel;
+import net.qiujuer.italker.factory.model.card.GroupCard;
+import net.qiujuer.italker.factory.model.card.GroupMemberCard;
+import net.qiujuer.italker.factory.model.card.MessageCard;
+import net.qiujuer.italker.factory.model.card.UserCard;
 import net.qiujuer.italker.factory.persistence.Account;
 import net.qiujuer.italker.factory.utils.DBFlowExclusionStrategy;
 
+import java.lang.reflect.Type;
+import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -27,6 +36,7 @@ import java.util.concurrent.Executors;
  */
 
 public class Factory {
+    private static final String TAG = Factory.class.getSimpleName();
     //单例模式
     private static final Factory instance;
     private final Executor executor;
@@ -40,7 +50,6 @@ public class Factory {
         gson = new GsonBuilder()
                 //设置事件格式
                 .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS")
-                //TODO 设置一个过滤器，数据库级别的model不进行转换
                 .setExclusionStrategies(new DBFlowExclusionStrategy())
                 .create();
     }
@@ -153,10 +162,54 @@ public class Factory {
     /**
      * 处理推送来的消息
      *
-     * @param message 消息
+     * @param str 消息
      */
-    public static void dispatchPush(String message) {
-        // TODO
+    public static void dispatchPush(String str) {
+        if (!Account.isLogin()){
+            return;
+        }
+        PushModel model = PushModel.decode(str);
+        if (model==null)
+            return;
+        Log.e(TAG,model.toString());
+        for (PushModel.Entity entity : model.getEntities()) {
+            switch (entity.type){
+                case PushModel.ENTITY_TYPE_LOGOUT:
+                   instance.logout();
+                    return;
+                case PushModel.ENTITY_TYPE_MESSAGE:{
+                    //普通消息
+                    MessageCard card = getGson().fromJson(entity.content,MessageCard.class);
+                    getMessageCenter().dispatch(card);
+                    break;
+                }
+                case PushModel.ENTITY_TYPE_ADD_FRIEND:{
+                    UserCard card = getGson().fromJson(entity.content,UserCard.class);
+                    getUserCenter().dispatch(card);
+                    break;
+                }
+                case PushModel.ENTITY_TYPE_ADD_GROUP:{
+                    GroupCard card = getGson().fromJson(entity.content,GroupCard.class);
+                    getGroupCenter().dispatch(card);
+                    break;
+                }
+                //群成员变更，回来的是一个群成员的列表
+                case PushModel.ENTITY_TYPE_MODIFY_GROUP_MEMBERS:
+                case PushModel.ENTITY_TYPE_ADD_GROUP_MEMBERS:{
+                    Type type = new TypeToken<List<GroupMemberCard>>(){}.getType();
+                    List<GroupMemberCard> card = getGson().fromJson(entity.content,type);
+                    getGroupCenter().dispatch(card.toArray(new GroupMemberCard[0]));
+                    break;
+                }
+                case PushModel.ENTITY_TYPE_EXIT_GROUP_MEMBERS:{
+                    //TODO
+                    //成员退出的推送
+                }
+
+            }
+        }
+
+
     }
 
     /**

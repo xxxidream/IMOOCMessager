@@ -4,10 +4,12 @@ import android.support.annotation.NonNull;
 
 import com.raizlabs.android.dbflow.structure.database.transaction.QueryTransaction;
 
+import net.qiujuer.genius.kit.reflect.Reflector;
 import net.qiujuer.italker.factory.data.helper.DbHelper;
 import net.qiujuer.italker.factory.model.db.BaseDbModel;
 import net.qiujuer.italker.utils.CollectionUtil;
 
+import java.lang.reflect.Type;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -23,16 +25,23 @@ public abstract  class BaseDbRepository<Data extends BaseDbModel<Data>> implemen
 {
     private SuccessCallback<List<Data>> callback;
     private final List<Data> dataList = new LinkedList<>();
-    private Class<Data> dataClass ;
+    private Class<Data> dataClass;//当前泛型对应的真实的class信息
 
+    public BaseDbRepository(){
+        Type[] types = Reflector.getActualTypeArguments(BaseDbRepository.class,this.getClass());
+        dataClass = (Class<Data>) types[0];
+    }
     @Override
     public void load(SuccessCallback<List<Data>> callback) {
         this.callback = callback;
+        //进行数据库监听操作
+        registerDbChangedListener();
     }
 
     @Override
     public void dispose() {
         this.callback = null;
+        DbHelper.removeChangedListener(dataClass,this);
     }
 
     /**
@@ -58,7 +67,15 @@ public abstract  class BaseDbRepository<Data extends BaseDbModel<Data>> implemen
      */
     @Override
     public void onDataDelete(Data... list) {
-
+        boolean isChanged = false;
+        for (Data data : list) {
+            if (dataList.remove(data)){
+                isChanged = true;
+            }
+        }
+        if (isChanged){
+            notyfiDataChanged();
+        }
     }
 
     //DBFLOW框架通知的回调
@@ -111,5 +128,9 @@ public abstract  class BaseDbRepository<Data extends BaseDbModel<Data>> implemen
         }
         return -1;
     }
-    public abstract boolean isRequired(Data data);
+
+    protected void registerDbChangedListener(){
+        DbHelper.addChangedListener(dataClass,this);
+    }
+    protected abstract boolean isRequired(Data data);
 }
